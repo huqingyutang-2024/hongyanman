@@ -1,403 +1,635 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>智能医疗问诊平台</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>男性健康自检表</title>
     <style>
-        :root {
-            --spacing-system: 12px;
-            --primary-green: #06BE5D;
-            --bg-grey: #F0F0F0;
-            --error-red: #FF4444;
-            --border-radius: 18px;
-        }
-
         body {
-            font-family: "Microsoft YaHei", sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            background: linear-gradient(to bottom, #060cc8, #ffffff); 
+            margin: 0 15px 20px; /* 10px left, 30px bottom, 10px right margin */
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px;
             margin: 0;
-            background: var(--bg-grey);
-            min-height: 100vh;
+            font-size: 25px;
         }
-        :root {
-            --spacing-system: 12px;
-            --primary-green: #06BE5D;
-            --bg-grey: #F0F0F0;
-            --error-red: #FF4444;
-            --border-radius: 18px;
-        }
-        .chat-container {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: var(--spacing-system);
-            padding-bottom: 100px;
-            box-sizing: border-box;
-        }
-
-        .message-row {
-            display: flex;
-            margin: 12px 0;
-            align-items: flex-start;
-            animation: fadeIn 0.3s ease;
-            gap: 8px;
-        }
-
-        .user-message {
-            flex-direction: row-reverse;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin: 0;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+        img {
+            margin-top: 10px;
+            max-width: 100%; /* 图片最大宽度为父元素宽度的百分之百 */
+            height: auto; /* 高度自动调整以保持比例 */
+            /* 相对定位与 transform 居中代码 */
             position: relative;
-        }
-
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .message-bubble {
-            max-width: calc(100% - 60px);
-            min-width: 40px;
-            padding: 12px 16px;
-            border-radius: var(--border-radius);
-            line-height: 1.5;
-            position: relative;
-            font-size: 16px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-            word-break: break-word;
-        }
-
-        .bot-bubble {
-            background: #FFFFFF;
-            border: 1px solid #e5e5e5;
-        }
-
-        .bot-bubble::before {
-            content: "";
-            position: absolute;
-            left: -6px;
-            top: 12px;
-            width: 0;
-            height: 0;
-            border: 6px solid transparent;
-            border-right-color: #FFFFFF;
-            border-left: 0;
-        }
-
-        .user-bubble {
-            background: #9EEB6C;
-            color: #000;
-        }
-
-        .user-bubble::after {
-            content: "";
-            position: absolute;
-            right: -6px;
-            top: 12px;
-            width: 0;
-            height: 0;
-            border: 6px solid transparent;
-            border-left-color: #9EEB6C;
-            border-right: 0;
-        }
-
-        .input-area {
-            position: fixed;
-            bottom: var(--spacing-system);
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 2 * var(--spacing-system));
-            max-width: 800px;
-            background: #f8f8f8;
-            padding: 8px 16px;
-            border-radius: 8px;
-            box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
-            display: flex;
-            gap: 8px;
+            transform: translate(-50%, -0%);
         }
-
-        #messageInput {
+        #symptomForm {
+            background-color: #fff;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            margin: 0 auto; /* Center the form horizontally */
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        table {
+            display: none;
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        table th {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        table td {
+            background-color: #fff;
+        }
+        .bottom-row {
             flex: 1;
-            padding: 10px 20px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            font-size: 16px;
-            min-height: 40px;
-            resize: none;
-            box-sizing: border-box;
         }
-
-        #sendBtn {
-            background: var(--primary-green);
+        .details-button02 {
+            cursor: pointer;
+            background-color: #1777ff;
             color: white;
             border: none;
-            border-radius: 20px;
-            padding: 10px 24px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        #sendBtn:active {
-            opacity: 0.8;
-        }
-
-        .timestamp {
+            padding: 10px;
             text-align: center;
-            color: #888;
-            font-size: 12px;
-            margin: 16px 0;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin-top: 10px;
+            color: #ffffff;
+            border-radius: 20px;
+        }
+        .moda10 {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.9);
+            padding-top: 60px;
+        }  
+        .moda10-content {
+            margin: auto;
+            display: block;
+            width: 90%;
+            max-width: 700px;
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #f1f1f1;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .moda10 img {
+            width: 100%;
+        }
+        #result-container {
+            margin: 0 auto;
         }
 
-        .typing-indicator {
-            display: inline-flex;
-            padding: 8px 16px;
-            background: #fff;
-            border-radius: 18px;
+        @media screen and (max-width: 600px) {
+            #symptomForm {
+                width: 90%;
+            }
+        }
+                /* 悬浮按钮样式 */
+        .fixed-button {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            z-index: 1000;
+            transform: translateY(-50%);
+            background: url('images/ds.jpg') center/cover;
+            border: 2px solid white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: 0.3s;
+			margin-right: 15px;
         }
 
-        .typing-dot {
-            width: 6px;
-            height: 6px;
-            margin: 0 2px;
-            background: #ddd;
+        .fixed-button:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* 遮罩层 */
+        .popup-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1001;
+            display: none;
+        }
+
+        /* 弹窗容器 */
+        .popup-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 70%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            z-index: 1002;
+            display: none;
+        }
+
+        /* iframe样式 */
+        .popup-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
+
+        /* 关闭按钮 */
+        .close-btn {
+            position: absolute;
+            right: -20px;
+            top: -20px;
+            width: 40px;
+            height: 40px;
+            background: #ff4444;
+            color: white;
+            border: none;
             border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-
-        @keyframes typing {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
-        }
-
-        @media (max-width: 768px) {
-            :root {
-                --spacing-system: 8px;
-            }
-
-            .message-bubble {
-                max-width: calc(100% - 50px);
-                font-size: 15px;
-            }
-
-            .avatar {
-                width: 36px;
-                height: 36px;
-            }
-
-            .input-area {
-                width: 96%;
-                padding: 12px;
-                bottom: 0;
-            }
-
-            #messageInput {
-                font-size: 15px;
-                padding: 8px 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .message-bubble {
-                max-width: calc(100% - 45px);
-            }
+            cursor: pointer;
+            font-size: 24px;
+            line-height: 40px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div id="chatHistory">
-            <div class="timestamp">今天 09:30</div>
-            <div class="message-row">
-                <div class="avatar bot-avatar">
-                    <img src="images/12.png" alt="AI Avatar">
-                </div>
-                <div class="message-bubble bot-bubble">
-                    您好，我是Deepseek中医智能体，随时为您解答健康问题。
-                </div>
-            </div>
-        </div>
-    </div>
+ <script>
+        // 设置目标日期
+        const targetDate = new Date('2025-07-16T00:00:00');
+        const currentDate = new Date();
 
-    <div class="input-area">
-        <input type="text" id="messageInput" placeholder="输入您的健康问题...">
-        <button id="sendBtn">发送</button>
+        if (currentDate > targetDate) {
+            // 若当前时间超过目标时间，跳转到指定页面
+            window.location.href = ''; // 替换为你要跳转的网页地址
+        }
+    </script>
+    <img src="images/kaitou.jpg" alt="自检表">
+    <form id="symptomForm">
+	<label><input type="checkbox" name="symptom" value="1、形体消瘦">1、形体消瘦</label>
+	<label><input type="checkbox" name="symptom" value="2、口燥咽干">2、口燥咽干</label>
+	<label><input type="checkbox" name="symptom" value="3、两颧潮红">3、两颧潮红</label>
+	<label><input type="checkbox" name="symptom" value="4、嘴巴起皮">4、嘴巴起皮</label>
+	<label><input type="checkbox" name="symptom" value="5、易饥饿">5、易饥饿</label>
+	<label><input type="checkbox" name="symptom" value="6、小便短黄">6、小便短黄</label>
+	<label><input type="checkbox" name="symptom" value="7、大便干结">7、大便干结</label>
+	<label><input type="checkbox" name="symptom" value="8、舌质红">8、舌质红</label>
+	<label><input type="checkbox" name="symptom" value="9、眼睛干涩">9、眼睛干涩</label>
+	<label><input type="checkbox" name="symptom" value="10、脚心发热">10、脚心发热</label>
+	<label><input type="checkbox" name="symptom" value="11、心口烦热">11、心口烦热</label>
+	<label><input type="checkbox" name="symptom" value="12、潮热">12、潮热</label>
+	<label><input type="checkbox" name="symptom" value="13、手足脱皮">13、手足脱皮</label>
+	<label><input type="checkbox" name="symptom" value="14、手心发热">14、手心发热</label>
+	<label><input type="checkbox" name="symptom" value="15、睡觉出汗">15、睡觉出汗</label>
+	<label><input type="checkbox" name="symptom" value="16、皮肤干燥">16、皮肤干燥</label>
+	<label><input type="checkbox" name="symptom" value="17、心慌心悸">17、心慌心悸</label>
+	<label><input type="checkbox" name="symptom" value="18、身体困重">18、身体困重</label>
+	<label><input type="checkbox" name="symptom" value="19、大便稀">19、大便稀</label>
+	<label><input type="checkbox" name="symptom" value="20、腹胀腹泻">20、腹胀腹泻</label>
+	<label><input type="checkbox" name="symptom" value="21、头脑昏沉">21、头脑昏沉</label>
+	<label><input type="checkbox" name="symptom" value="22、面部长痘">22、面部长痘</label>
+	<label><input type="checkbox" name="symptom" value="23、小肚子大">23、小肚子大</label>
+	<label><input type="checkbox" name="symptom" value="24、嗜睡">24、嗜睡</label>
+	<label><input type="checkbox" name="symptom" value="25、口腻不渴">25、口腻不渴</label>
+	<label><input type="checkbox" name="symptom" value="26、吃饭不香">26、吃饭不香</label>
+	<label><input type="checkbox" name="symptom" value="27、恶心">27、恶心</label>
+	<label><input type="checkbox" name="symptom" value="28、阴囊潮湿">28、阴囊潮湿</label>
+	<label><input type="checkbox" name="symptom" value="29、耳内潮湿">29、耳内潮湿</label>
+	<label><input type="checkbox" name="symptom" value="30、肌肉酸痛">30、肌肉酸痛</label>
+	<label><input type="checkbox" name="symptom" value="31、关节酸胀">31、关节酸胀</label>
+	<label><input type="checkbox" name="symptom" value="32、大便黏腻">32、大便黏腻</label>
+	<label><input type="checkbox" name="symptom" value="33、小便浑浊">33、小便浑浊</label>
+	<label><input type="checkbox" name="symptom" value="34、头发油腻">34、头发油腻</label>
+	<label><input type="checkbox" name="symptom" value="35、打鼾">35、打鼾</label>
+	<label><input type="checkbox" name="symptom" value="36、舌苔厚腻">36、舌苔厚腻</label>
+	<label><input type="checkbox" name="symptom" value="37、湿疹">37、湿疹</label>
+	<label><input type="checkbox" name="symptom" value="38、皮肤瘙痒">38、皮肤瘙痒</label>
+	<label><input type="checkbox" name="symptom" value="39、脸上出油">39、脸上出油</label>
+	<label><input type="checkbox" name="symptom" value="40、前胸后背长痘">40、前胸后背长痘</label>
+	<label><input type="checkbox" name="symptom" value="41、虚胖">41、虚胖</label>
+	<label><input type="checkbox" name="symptom" value="42、头晕">42、头晕</label>
+	<label><input type="checkbox" name="symptom" value="43、头顶痛">43、头顶痛</label>
+	<label><input type="checkbox" name="symptom" value="44、头两侧痛">44、头两侧痛</label>
+	<label><input type="checkbox" name="symptom" value="45、眼花">45、眼花</label>
+	<label><input type="checkbox" name="symptom" value="46、指甲凹陷">46、指甲凹陷</label>
+	<label><input type="checkbox" name="symptom" value="47、手抖">47、手抖</label>
+	<label><input type="checkbox" name="symptom" value="48、视力减退">48、视力减退</label>
+	<label><input type="checkbox" name="symptom" value="49、指甲无光泽">49、指甲无光泽</label>
+	<label><input type="checkbox" name="symptom" value="50、胁肋疼痛">50、胁肋疼痛</label>
+	<label><input type="checkbox" name="symptom" value="51、面部烘热">51、面部烘热</label>
+	<label><input type="checkbox" name="symptom" value="52、1-3点醒">52、1-3点醒</label>
+	<label><input type="checkbox" name="symptom" value="53、眼屎多">53、眼屎多</label>
+	<label><input type="checkbox" name="symptom" value="54、经常叹气">54、经常叹气</label>
+	<label><input type="checkbox" name="symptom" value="55、少腹胀痛">55、少腹胀痛</label>
+	<label><input type="checkbox" name="symptom" value="56、胸胁胀闷">56、胸胁胀闷</label>
+	<label><input type="checkbox" name="symptom" value="57、情绪低落">57、情绪低落</label>
+	<label><input type="checkbox" name="symptom" value="58、脸上长斑">58、脸上长斑</label>
+	<label><input type="checkbox" name="symptom" value="59、血痣增多">59、血痣增多</label>
+	<label><input type="checkbox" name="symptom" value="60、口苦">60、口苦</label>
+	<label><input type="checkbox" name="symptom" value="61、急躁易怒">61、急躁易怒</label>
+	<label><input type="checkbox" name="symptom" value="62、失眠多梦">62、失眠多梦</label>
+	<label><input type="checkbox" name="symptom" value="63、半月痕少">63、半月痕少</label>
+	<label><input type="checkbox" name="symptom" value="64、眼底黄斑">64、眼底黄斑</label>
+	<label><input type="checkbox" name="symptom" value="65、吃得少">65、吃得少</label>
+	<label><input type="checkbox" name="symptom" value="66、不消化">66、不消化</label>
+	<label><input type="checkbox" name="symptom" value="67、口臭">67、口臭</label>
+	<label><input type="checkbox" name="symptom" value="68、肌肉无力">68、肌肉无力</label>
+	<label><input type="checkbox" name="symptom" value="69、神疲乏力">69、神疲乏力</label>
+	<label><input type="checkbox" name="symptom" value="70、浮肿">70、浮肿</label>
+	<label><input type="checkbox" name="symptom" value="71、便意频数">71、便意频数</label>
+	<label><input type="checkbox" name="symptom" value="72、肛门重坠">72、肛门重坠</label>
+	<label><input type="checkbox" name="symptom" value="73、吃水果较多">73、吃水果较多</label>
+	<label><input type="checkbox" name="symptom" value="74、久泻不止">74、久泻不止</label>
+	<label><input type="checkbox" name="symptom" value="75、嘴巴淡">75、嘴巴淡</label>
+	<label><input type="checkbox" name="symptom" value="76、齿痕舌">76、齿痕舌</label>
+	<label><input type="checkbox" name="symptom" value="77、胃下垂">77、胃下垂</label>
+	<label><input type="checkbox" name="symptom" value="78、肠鸣">78、肠鸣</label>
+	<label><input type="checkbox" name="symptom" value="79、腹痛">79、腹痛</label>
+	<label><input type="checkbox" name="symptom" value="80、打嗝">80、打嗝</label>
+	<label><input type="checkbox" name="symptom" value="81、嗳腐吞酸">81、嗳腐吞酸</label>
+	<label><input type="checkbox" name="symptom" value="82、咳嗽无痰">82、咳嗽无痰</label>
+	<label><input type="checkbox" name="symptom" value="83、哮喘">83、哮喘</label>
+	<label><input type="checkbox" name="symptom" value="84、喘息短气">84、喘息短气</label>
+	<label><input type="checkbox" name="symptom" value="85、反复低烧">85、反复低烧</label>
+	<label><input type="checkbox" name="symptom" value="86、鼻痒">86、鼻痒</label>
+	<label><input type="checkbox" name="symptom" value="87、流鼻血">87、流鼻血</label>
+	<label><input type="checkbox" name="symptom" value="88、易过敏">88、易过敏</label>
+	<label><input type="checkbox" name="symptom" value="89、咳嗽有痰">89、咳嗽有痰</label>
+	<label><input type="checkbox" name="symptom" value="90、声音嘶哑">90、声音嘶哑</label>
+	<label><input type="checkbox" name="symptom" value="91、鼻塞">91、鼻塞</label>
+	<label><input type="checkbox" name="symptom" value="92、喉痒">92、喉痒</label>
+	<label><input type="checkbox" name="symptom" value="93、喷嚏">93、喷嚏</label>
+	<label><input type="checkbox" name="symptom" value="94、鼻屎多">94、鼻屎多</label>
+	<label><input type="checkbox" name="symptom" value="95、免疫力低">95、免疫力低</label>
+	<label><input type="checkbox" name="symptom" value="96、痰粘难出">96、痰粘难出</label>
+	<label><input type="checkbox" name="symptom" value="97、全身酸痛">97、全身酸痛</label>
+	<label><input type="checkbox" name="symptom" value="98、恶寒发热">98、恶寒发热</label>
+	<label><input type="checkbox" name="symptom" value="99、易感冒">99、易感冒</label>
+	<label><input type="checkbox" name="symptom" value="100、咽喉肿痛">100、咽喉肿痛</label>
+	<label><input type="checkbox" name="symptom" value="101、疱疹性咽炎">101、疱疹性咽炎</label>
+	<label><input type="checkbox" name="symptom" value="102、鼻炎">102、鼻炎</label>
+	<label><input type="checkbox" name="symptom" value="103、痰少而黄">103、痰少而黄</label>
+	<label><input type="checkbox" name="symptom" value="104、流浊涕">104、流浊涕</label>
+	<label><input type="checkbox" name="symptom" value="105、流清涕">105、流清涕</label>
+	<label><input type="checkbox" name="symptom" value="106、发烧">106、发烧</label>
+	<label><input type="checkbox" name="symptom" value="107、鼻干">107、鼻干</label>
+	<label><input type="checkbox" name="symptom" value="108、用嗓较多">108、用嗓较多</label>
+	<label><input type="checkbox" name="symptom" value="109、3-5点咳嗽">109、3-5点咳嗽</label>
+	<label><input type="checkbox" name="symptom" value="110、面色发黑">110、面色发黑</label>
+	<label><input type="checkbox" name="symptom" value="111、精神不振">111、精神不振</label>
+	<label><input type="checkbox" name="symptom" value="112、小便频数清长">112、小便频数清长</label>
+	<label><input type="checkbox" name="symptom" value="113、牙齿松动">113、牙齿松动</label>
+	<label><input type="checkbox" name="symptom" value="114、阳痿早泄">114、阳痿早泄</label>
+	<label><input type="checkbox" name="symptom" value="115、成人早衰">115、成人早衰</label>
+	<label><input type="checkbox" name="symptom" value="116、尿后余沥不尽">116、尿后余沥不尽</label>
+	<label><input type="checkbox" name="symptom" value="117、备孕">117、备孕</label>
+	<label><input type="checkbox" name="symptom" value="118、头发干枯">118、头发干枯</label>
+	<label><input type="checkbox" name="symptom" value="119、腰膝酸软">119、腰膝酸软</label>
+	<label><input type="checkbox" name="symptom" value="120、性欲减退">120、性欲减退</label>
+	<label><input type="checkbox" name="symptom" value="121、夜尿频多">121、夜尿频多</label>
+	<label><input type="checkbox" name="symptom" value="122、掉发健忘">122、掉发健忘</label>
+	<label><input type="checkbox" name="symptom" value="123、精神恍惚">123、精神恍惚</label>
+	<label><input type="checkbox" name="symptom" value="124、遗尿">124、遗尿</label>
+	<label><input type="checkbox" name="symptom" value="125、精子成活率低">125、精子成活率低</label>
+	<label><input type="checkbox" name="symptom" value="126、骨软无力">126、骨软无力</label>
+	<label><input type="checkbox" name="symptom" value="127、畏寒肢冷">127、畏寒肢冷</label>
+	<label><input type="checkbox" name="symptom" value="128、遗精">128、遗精</label>
+	<label><input type="checkbox" name="symptom" value="129、耳鸣">129、耳鸣</label>
+	<label><input type="checkbox" name="symptom" value="130、早生白发">130、早生白发</label>
+	<label><input type="checkbox" name="symptom" value="131、骨蒸潮热">131、骨蒸潮热</label>
+	<label><input type="checkbox" name="symptom" value="132、神情呆钝">132、神情呆钝</label>
+	<label><input type="checkbox" name="symptom" value="133、小便失禁">133、小便失禁</label>
+	<label><input type="checkbox" name="symptom" value="134、滑精">134、滑精</label>
+	<label><input type="checkbox" name="symptom" value="135、眼皮易肿">135、眼皮易肿</label>
+	<label><input type="checkbox" name="symptom" value="136、下肢肿胀">136、下肢肿胀</label>
+	<label><input type="checkbox" name="symptom" value="137、凌晨3-5点容易腹泻">137、凌晨3-5点容易腹泻</label>
+	<label><input type="checkbox" name="symptom" value="138、耳蒙">138、耳蒙</label>
+	<label><input type="checkbox" name="symptom" value="139、射精疼痛">139、射精疼痛</label>
+	<label><input type="checkbox" name="symptom" value="140、午后颧红">140、午后颧红</label>
+	<label><input type="checkbox" name="symptom" value="141、动作迟缓">141、动作迟缓</label>
+	<label><input type="checkbox" name="symptom" value="142、体力衰退">142、体力衰退</label>
+	<label><input type="checkbox" name="symptom" value="143、性欲亢进">143、性欲亢进</label>
+	<label><input type="checkbox" name="symptom" value="144、气短声低">144、气短声低</label>
+	<label><input type="checkbox" name="symptom" value="145、面色萎黄">145、面色萎黄</label>
+	<label><input type="checkbox" name="symptom" value="146、少气懒言">146、少气懒言</label>
+	 <label><input type="checkbox" name="symptom" value="147、手足麻木">147、手足麻木</label>
+	 <label><input type="checkbox" name="symptom" value="148、手心出汗">148、手心出汗</label>
+	 <label><input type="checkbox" name="symptom" value="149、动则汗出">149、动则汗出</label>
+	 <label><input type="checkbox" name="symptom" value="150、脚心出汗">150、脚心出汗</label>
+	
+        <input type="button" value="提交" style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center;" onclick="showSelectedSymptoms()">
+    </form>
+
+    <div id="result-container">
+        <table id="symptomTable">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>症状</th>
+                    <th>症状调理的方向</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 
     <script>
-        // API配置
-        const API_CONFIG = {
-            endpoint: 'https://yuanqi.tencent.com/openapi/v1/agent/chat/completions',
-            assistant_id: 'usI8myVz7UMd',
-            token: 'MSVEDpnrpJWoAVes8TmIVaste0oLR9IC'
+        // 症状与对应问题的映射
+        var symptomLetters = {
+             "1、形体消瘦": ["阴虚→(铁皮)"],
+              "2、口燥咽干": ["阴虚→(铁皮)"],
+              "3、两颧潮红": ["阴虚→(铁皮)"],
+              "4、嘴巴起皮": ["阴虚→(铁皮)"],
+              "5、易饥饿": ["阴虚→(铁皮)"],
+              "6、小便短黄": ["阴虚→(铁皮)"],
+              "7、大便干结": ["阴虚→(铁皮)"],
+              "8、舌质红": ["阴虚→(铁皮)"],
+              "9、眼睛干涩": ["阴虚→(铁皮)"],
+              "10、脚心发热": ["阴虚→(铁皮)"],
+              "11、心口烦热": ["阴虚→(铁皮)"],
+              "12、潮热": ["阴虚→(铁皮)"],
+              "13、手足脱皮": ["阴虚→(铁皮)"],
+              "14、手心发热": ["阴虚→(铁皮)"],
+              "15、睡觉出汗": ["阴虚→(铁皮)"],
+              "16、皮肤干燥": ["阴虚→(铁皮)"],
+              "17、心慌心悸": ["阴虚→(铁皮)"],
+              "18、身体困重": ["湿气→(玉仁)"],
+              "19、大便稀": ["湿气→(玉仁)"],
+              "20、腹胀腹泻": ["湿气→(玉仁)"],
+              "21、头脑昏沉": ["湿气→(玉仁)"],
+              "22、面部长痘": ["湿气→(玉仁)"],
+              "23、小肚子大": ["湿气→(玉仁)"],
+              "24、嗜睡": ["湿气→(玉仁)"],
+              "25、口腻不渴": ["湿气→(玉仁)"],
+              "26、吃饭不香": ["湿气→(玉仁)"],
+              "27、恶心": ["湿气→(玉仁)"],
+              "28、阴囊潮湿": ["湿气→(玉仁)"],
+              "29、耳内潮湿": ["湿气→(玉仁)"],
+              "30、肌肉酸痛": ["湿气→(玉仁)"],
+              "31、关节酸胀": ["湿气→(玉仁)"],
+              "32、大便黏腻": ["湿气→(玉仁)"],
+              "33、小便浑浊": ["湿气→(玉仁)"],
+              "34、头发油腻": ["湿气→(玉仁)"],
+              "35、打鼾": ["湿气→(玉仁)"],
+              "36、舌苔厚腻": ["湿气→(玉仁)"],
+              "37、湿疹": ["湿气→(玉仁)"],
+              "38、皮肤瘙痒": ["湿气→(玉仁)"],
+              "39、脸上出油": ["湿气→(玉仁)"],
+              "40、前胸后背长痘": ["湿气→(玉仁)"],
+              "41、虚胖": ["湿气→(玉仁)"],
+              "42、头晕": ["肝胆→(玉蚕)"],
+              "43、头顶痛": ["肝胆→(玉蚕)"],
+              "44、头两侧痛": ["肝胆→(玉蚕)"],
+              "45、眼花": ["肝胆→(玉蚕)"],
+              "46、指甲凹陷": ["肝胆→(玉蚕)"],
+              "47、手抖": ["肝胆→(玉蚕)"],
+              "48、视力减退": ["肝胆→(玉蚕)"],
+              "49、指甲无光泽": ["肝胆→(玉蚕)"],
+              "50、胁肋疼痛": ["肝胆→(玉蚕)"],
+              "51、面部烘热": ["肝胆→(玉蚕)"],
+              "52、1-3点醒": ["肝胆→(玉蚕)"],
+              "53、眼屎多": ["肝胆→(玉蚕)"],
+              "54、经常叹气": ["肝胆→(玉蚕)"],
+              "55、少腹胀痛": ["肝胆→(玉蚕)"],
+              "56、胸胁胀闷": ["肝胆→(玉蚕)"],
+              "57、情绪低落": ["肝胆→(玉蚕)"],
+              "58、脸上长斑": ["肝胆→(玉蚕)"],
+              "59、血痣增多": ["肝胆→(玉蚕)"],
+              "60、口苦": ["肝胆→(玉蚕)"],
+              "61、急躁易怒": ["肝胆→(玉蚕)"],
+              "62、失眠多梦": ["肝胆→(玉蚕)"],
+              "63、半月痕少": ["肝胆→(玉蚕)"],
+              "64、眼底黄斑": ["肝胆→(玉蚕)"],
+              "65、吃得少": ["脾胃→(大脾)"],
+              "66、不消化": ["脾胃→(大脾)"],
+              "67、口臭": ["脾胃→(大脾)"],
+              "68、肌肉无力": ["脾胃→(大脾)"],
+              "69、神疲乏力": ["脾胃→(大脾)"],
+              "70、浮肿": ["脾胃→(大脾)"],
+              "71、便意频数": ["脾胃→(大脾)"],
+              "72、肛门重坠": ["脾胃→(大脾)"],
+              "73、吃水果较多": ["脾胃→(大脾)"],
+              "74、久泻不止": ["脾胃→(大脾)"],
+              "75、嘴巴淡": ["脾胃→(大脾)"],
+              "76、齿痕舌": ["脾胃→(大脾)"],
+              "77、胃下垂": ["脾胃→(大脾)"],
+              "78、肠鸣": ["脾胃→(大脾)"],
+              "79、腹痛": ["脾胃→(大脾)"],
+              "80、打嗝": ["脾胃→(大脾)"],
+              "81、嗳腐吞酸": ["脾胃→(大脾)"],
+              "82、咳嗽无痰": ["肺→(玉竹)"],
+              "83、哮喘": ["肺→(玉竹)"],
+              "84、喘息短气": ["肺→(玉竹)"],
+              "85、反复低烧": ["肺→(玉竹)"],
+              "86、鼻痒": ["肺→(玉竹)"],
+              "87、流鼻血": ["肺→(玉竹)"],
+              "88、易过敏": ["肺→(玉竹)"],
+              "89、咳嗽有痰": ["肺→(玉竹)"],
+              "90、声音嘶哑": ["肺→(玉竹)"],
+              "91、鼻塞": ["肺→(玉竹)"],
+              "92、喉痒": ["肺→(玉竹)"],
+              "93、喷嚏": ["肺→(玉竹)"],
+              "94、鼻屎多": ["肺→(玉竹)"],
+              "95、免疫力低": ["肺→(玉竹)"],
+              "96、痰粘难出": ["肺→(玉竹)"],
+              "97、全身酸痛": ["肺→(玉竹)"],
+              "98、恶寒发热": ["肺→(玉竹)"],
+              "99、易感冒": ["肺→(玉竹)"],
+              "100、咽喉肿痛": ["肺→(玉竹)"],
+              "101、疱疹性咽炎": ["肺→(玉竹)"],
+              "102、鼻炎": ["肺→(玉竹)"],
+              "103、痰少而黄": ["肺→(玉竹)"],
+              "104、流浊涕": ["肺→(玉竹)"],
+              "105、流清涕": ["肺→(玉竹)"],
+              "106、发烧": ["肺→(玉竹)"],
+              "107、鼻干": ["肺→(玉竹)"],
+              "108、用嗓较多": ["肺→(玉竹)"],
+              "109、3-5点咳嗽": ["肺→(玉竹)"],
+              "110、面色发黑": ["肾→(甚元)"],
+              "111、精神不振": ["肾→(甚元)"],
+              "112、小便频数清长": ["肾→(甚元)"],
+              "113、牙齿松动": ["肾→(甚元)"],
+              "114、阳痿早泄": ["肾→(甚元)"],
+              "115、成人早衰": ["肾→(甚元)"],
+              "116、尿后余沥不尽": ["肾→(甚元)"],
+              "117、备孕": ["肾→(甚元)"],
+              "118、头发干枯": ["肾→(甚元)"],
+              "119、腰膝酸软": ["肾→(甚元)"],
+              "120、性欲减退": ["肾→(甚元)"],
+              "121、夜尿频多": ["肾→(甚元)"],
+              "122、掉发健忘": ["肾→(甚元)"],
+              "123、精神恍惚": ["肾→(甚元)"],
+              "124、遗尿": ["肾→(甚元)"],
+              "125、精子成活率低": ["肾→(甚元)"],
+              "126、骨软无力": ["肾→(甚元)"],
+              "127、畏寒肢冷": ["肾→(甚元)"],
+              "128、遗精": ["肾→(甚元)"],
+              "129、耳鸣": ["肾→(甚元)"],
+              "130、早生白发": ["肾→(甚元)"],
+              "131、骨蒸潮热": ["肾→(甚元)"],
+              "132、神情呆钝": ["肾→(甚元)"],
+              "133、小便失禁": ["肾→(甚元)"],
+              "134、滑精": ["肾→(甚元)"],
+              "135、眼皮易肿": ["肾→(甚元)"],
+              "136、下肢肿胀": ["肾→(甚元)"],
+              "137、凌晨3-5点容易腹泻": ["肾→(甚元)"],
+              "138、耳蒙": ["肾→(甚元)"],
+              "139、射精疼痛": ["肾→(甚元)"],
+              "140、午后颧红": ["肾→(甚元)"],
+              "141、动作迟缓": ["肾→(甚元)"],
+              "142、体力衰退": ["肾→(甚元)"],
+              "143、性欲亢进": ["肾→(甚元)"],
+              "144、气短声低": ["气血→(红玉)"],
+              "145、面色萎黄": ["气血→(红玉)"],
+              "146、少气懒言": ["气血→(红玉)"],
+              "147、手足麻木": ["气血→(红玉)"],
+              "148、手心出汗": ["气血→(红玉)"],
+              "149、动则汗出": ["气血→(红玉)"],
+              "150、脚心出汗": ["气血→(红玉)"],
+
         };
 
-        // 打字机效果类
-        class Typewriter {
-            constructor(element) {
-                this.element = element;
-                this.chars = [];
-                this.interval = null;
-            }
-
-            type(text, speed = 32) {
-                return new Promise(resolve => {
-                    let index = 0;
-                    this.interval = setInterval(() => {
-                        if (index >= text.length) {
-                            clearInterval(this.interval);
-                            resolve();
-                            return;
-                        }
-                        this.chars.push(text.charAt(index));
-                        this.element.textContent = this.chars.join('');
-                        index++;
-                        this.scrollToBottom();
-                    }, speed);
-                });
-            }
-        }
-
-        // 消息处理函数
-        async function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            if (!message) return;
-
-            addUserMessage(message);
-            input.value = '';
-            adjustInputHeight();
-            
-            try {
-                const typingRow = createTypingIndicator();
-                
-                const response = await fetch(API_CONFIG.endpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${API_CONFIG.token}`,
-                        'X-Source': 'openapi',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        model: "hunyuan-turbo",
-                        assistant_id: API_CONFIG.assistant_id,
-                        messages: [{
-                            role: "user",
-                            content: [{ type: "text", text: message }]
-                        }]
-                    })
-                });
-
-                if (!response.ok) throw new Error(`请求失败: ${response.status}`);
-                
-                const data = await response.json();
-                typingRow.remove();
-                
-                if (data.choices?.[0]?.message?.content) {
-                    await showBotResponse(data.choices[0].message.content);
-                } else {
-                    throw new Error('无效的响应格式');
+        function showSelectedSymptoms() {
+            // 获取所有勾选的症状
+            var selectedSymptoms = [];
+            var symptoms = document.getElementsByName('symptom');
+            for (var i = 0; i < symptoms.length; i++) {
+                if (symptoms[i].checked) {
+                    selectedSymptoms.push(symptoms[i].value);
                 }
-            } catch (error) {
-                showError(`服务暂时不可用: ${error.message}`);
             }
-        }
 
-        // 辅助函数
-        function addUserMessage(content) {
-            const row = document.createElement('div');
-            row.className = 'message-row user-message';
-            row.innerHTML = `
-                <div class="avatar user-avatar">🐸</div>
-                <div class="message-bubble user-bubble">${content}</div>
-            `;
-            document.getElementById('chatHistory').appendChild(row);
-            scrollToBottom();
-        }
+            // 如果没有勾选症状，显示提示信息
+            if (selectedSymptoms.length === 0) {
+                alert("请勾选至少一个症状");
+                document.getElementById('symptomTable').style.display = "none";
+                return;
+            }
 
-        async function showBotResponse(content) {
-            const row = document.createElement('div');
-            row.className = 'message-row bot-message';
-            row.innerHTML = `
-                <div class="avatar bot-avatar">
-                    <img src="images/12.png" alt="AI Avatar">
-                </div>
-                <div class="message-bubble bot-bubble"></div>
-            `;
-            document.getElementById('chatHistory').appendChild(row);
-            const bubble = row.querySelector('.bot-bubble');
-            const typewriter = new Typewriter(bubble);
-            await typewriter.type(content);
-            scrollToBottom();
-        }
+            // 填充表格
+            var tableBody = document.querySelector("#symptomTable tbody");
+            tableBody.innerHTML = ""; // 清空表格内容
+            selectedSymptoms.forEach(function(symptom, index) {
+                var row = document.createElement("tr");
 
-        function createTypingIndicator() {
-            const row = document.createElement('div');
-            row.className = 'message-row bot-message';
-            row.innerHTML = `
-                <div class="avatar bot-avatar">
-                    <img src="images/12.png" alt="AI Avatar">
-                </div>
-                <div class="message-bubble bot-bubble">
-                    <div class="typing-indicator">
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot" style="animation-delay: 0.2s"></div>
-                        <div class="typing-dot" style="animation-delay: 0.4s"></div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('chatHistory').appendChild(row);
-            scrollToBottom();
-            return row;
-        }
+                var cell1 = document.createElement("td");
+                cell1.textContent = index + 1; // 编号
+                row.appendChild(cell1);
 
-        function scrollToBottom() {
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: 'smooth'
+                var cell2 = document.createElement("td");
+                cell2.textContent = symptom; // 症状
+                row.appendChild(cell2);
+
+                var cell3 = document.createElement("td");
+                cell3.textContent = symptomLetters[symptom].join(", "); // 症状调理的方向
+                row.appendChild(cell3);
+
+                tableBody.appendChild(row);
             });
-        }
 
-        function adjustInputHeight() {
-            const input = document.getElementById('messageInput');
-            input.style.height = 'auto';
-            input.style.height = input.scrollHeight + 'px';
+            // 显示结果表格
+            document.getElementById('symptomTable').style.display = "table";
         }
-
-        // 时间更新功能
-        function updateTime() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const timestampDiv = document.querySelector('.timestamp');
-            timestampDiv.textContent = `今天 ${hours}:${minutes}`;
-        }
-        updateTime();
-        setInterval(updateTime, 1000);
-
-        // 事件绑定
-        document.getElementById('sendBtn').addEventListener('click', sendMessage);
-        document.getElementById('messageInput').addEventListener('input', adjustInputHeight);
-        document.getElementById('messageInput').addEventListener('keydown', e => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-    </script>
-    <script>
-        window.parent.postMessage({ type: 'iframeHeight', height: document.body.scrollHeight }, '*');
     </script>
 </body>
+  <img src="images/jieguo.png" alt="图片描述" />
+
+  <div class="bottom-row">
+        <img class="details-button01" src="images/kuaidi.jpg" alt="图片描述">
+    <!-- 原来的模态框内容被移除，因为点击图片后不再需要模态框 -->
+    <!--
+    <div id="myModa10" class="moda10">
+        <span class="close" onclick="closeModa10()">&times;</span>
+        <div class="moda10-content">
+            <img src="images/daweixin.png" alt="Product Image">
+        </div>
+    </div>
+    -->
+
+    <!-- 删除了 openModa10 和 closeModa10 函数，因为不再需要打开或关闭模态框 -->
+</div>
+    <!-- 悬浮按钮 -->
+    <button class="fixed-button" id="registerButton"></button>
+
+    <!-- 弹窗结构 -->
+    <div class="popup-mask" id="popupMask"></div>
+    <div class="popup-container" id="popupContainer">
+        <button class="close-btn" onclick="closePopup()">×</button>
+        <iframe class="popup-iframe" id="popupIframe"></iframe>
+    </div>
+
+    <script>
+        // 打开弹窗
+        document.getElementById('registerButton').addEventListener('click', function() {
+            const mask = document.getElementById('popupMask');
+            const container = document.getElementById('popupContainer');
+            const iframe = document.getElementById('popupIframe');
+            
+            // 加载目标网页
+            iframe.src = 'https://huqingyutang-2024.github.io/deepseek/'; // 替换为实际地址
+            mask.style.display = 'block';
+            container.style.display = 'block';
+            
+            // 禁止背景滚动
+            document.body.style.overflow = 'hidden';
+        });
+
+        // 关闭弹窗
+        function closePopup() {
+            const mask = document.getElementById('popupMask');
+            const container = document.getElementById('popupContainer');
+            const iframe = document.getElementById('popupIframe');
+            
+            iframe.src = '';
+            mask.style.display = 'none';
+            container.style.display = 'none';
+            
+            // 恢复背景滚动
+            document.body.style.overflow = 'auto';
+        }
+
+        // 点击遮罩层关闭
+        document.getElementById('popupMask').addEventListener('click', closePopup);
+    </script>
 </html>
